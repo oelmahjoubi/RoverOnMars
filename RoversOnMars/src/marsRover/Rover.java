@@ -31,9 +31,11 @@ public class Rover {
 	public void setPos(Position pos) {
 		this.pos = pos;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Rover [roverNumber=" + roverNumber + ", pos=" + pos + "]";
+		return "Rover [roverNumber=" + roverNumber + ", pos=" + pos + ", instructions=" + instructions + "]";
 	}
+	
+
 }

@@ -7,6 +7,7 @@ public class MarsRoverApp {
 		MarsRoverControl marsRover = new MarsRoverControl();
 		
 		marsRover.readInstructions("Instructions.txt");
+		marsRover.goAhead();
 	}
 
 }

@@ -31,6 +31,22 @@ public class Position {
 	public void setDir(String dir) {
 		this.dir = dir;
 	}
+	
+	public void incrementX() {
+		this.x ++;
+	}
+	
+	public void decrementX() {
+		this.x --;
+	}
+	
+	public void incrementY() {
+		this.y ++;
+	}
+	
+	public void decrementY() {
+		this.y --;
+	}
 
 	@Override
 	public String toString() {
