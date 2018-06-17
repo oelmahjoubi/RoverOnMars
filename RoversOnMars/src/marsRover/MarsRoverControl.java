@@ -12,7 +12,7 @@ public class MarsRoverControl {
 	Position pos = new Position(0,0,"N");
 	String instructions;
 	
-	List<Rover> Rovers = new ArrayList<>();
+	List<Rover> Rovers = new ArrayList<Rover>();
 	
 	
 	public void readInstructions(String fileX) {
@@ -37,15 +37,10 @@ public class MarsRoverControl {
 	    		String[] parts = string.split(" ");
 	    		plateauX = Integer.parseInt(parts[0]);
 	    		plateauY = Integer.parseInt(parts[1]); 
-	    		
-
-	    		
+	
 	    	}
-	    	else if (line.length() == 3 || var) {
+	    	else if (lineN % 2 != 0) {
 	    		
-	    		
-	    		if (line.length() == 3) {
-	    			
 		    		String[] parts = line.split(" ");
 		    		
 	    			this.pos.setX(Integer.parseInt(parts[0]));
@@ -54,7 +49,7 @@ public class MarsRoverControl {
 	    			
 	    			//New Position
 	    		}
-	    		else {
+	    	else {
 	    			
 	    			this.instructions = line;
 	    			
@@ -64,14 +59,10 @@ public class MarsRoverControl {
 	    			
 	    			//Add new Rover
 	    		}
-	    		
-	    		
-	    	}
-	    	
-	    	
-	      fr.close();
-	      lineN ++;
+	    	lineN ++;
 	      }
+	      
+	      fr.close();
 	    }
 	    catch(Exception e) {
 	      System.out.println("Exception reading the file "+ file + ": " + e);
@@ -79,8 +70,8 @@ public class MarsRoverControl {
 		
 		System.out.println(plateauX);
 		System.out.println(plateauY);
-		System.out.println(this.Rovers.get(0).getInstructions());
-		System.out.println(this.Rovers.get(1).getPos());
-	
+		System.out.println(this.Rovers);
+		//System.out.println(this.Rovers.get(1).getPos());
+		
 	}	
 }
