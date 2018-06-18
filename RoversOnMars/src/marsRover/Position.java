@@ -1,9 +1,9 @@
 package marsRover;
 
 public class Position {
-	int x;
-	int y;
-	String dir;
+	private int x;
+	private int y;
+	private String dir;
 	
 	public Position(int x, int y, String dir) {
 		

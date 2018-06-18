@@ -7,119 +7,136 @@ import java.util.List;
 
 public class MarsRoverControl {
 
-	int plateauX = 0;
-	int plateauY = 0;
-	int posY = 0;
-	int posX = 0;
-	String dir;
+	private int plateauX = 0;
+	private int plateauY = 0;
+	private int posY = 0;
+	private int posX = 0;
+	private String dir;
+	private boolean error = false;
 	
-	String instructions;
-	
-	List<Rover> Rovers = new ArrayList<Rover>();
+	private List<Rover> Rovers = new ArrayList<Rover>();
 	
 	
 	public void readInstructions(String fileX) {
 		
-		String file = fileX;
-		boolean var = false;
-		
+		String file = fileX;		
 		
 	    try {
-	      FileReader fr = new FileReader(file);
-	      BufferedReader br = new BufferedReader(fr);
+	      FileReader f = new FileReader(file);
+	      BufferedReader br = new BufferedReader(f);
 	 
-	      String line;
-	      int lineN = 0;
+	      String lineA;
+	      String lineB;
 	      int roverN = 0;
+	      boolean firstLine = true;
 	      
-	      while((line = br.readLine()) != null) {
+	      while((lineA = br.readLine()) != null) {
 	    	  
-	    	if (lineN == 0){
+	    	if (firstLine){
 	    		
-	    		String string = line;
-	    		String[] parts = string.split(" ");
+	    		String[] parts =  lineA.split(" ");
 	    		plateauX = Integer.parseInt(parts[0]);
 	    		plateauY = Integer.parseInt(parts[1]); 
-	
+	    		firstLine = false;
+
 	    	}
-	    	else if (lineN % 2 != 0) {
-	    		
-		    		String[] parts = line.split(" ");
-		    		
-	    			this.posX = Integer.parseInt(parts[0]);
-	    			this.posY = Integer.parseInt(parts[1]);
-	    			this.dir = parts[2];
-	    			
-	    			//New Position
-	    		}
 	    	else {
-	    			
-	    			this.instructions = line;
-	    			
-	    			Position pos = new Position (this.posX, this.posY, this.dir);
-	    			
-	    			Rover rover = new Rover(roverN,pos, this.instructions);
-	    			
-	    			this.Rovers.add(rover);
-	    			
-	    			roverN++;
+	    		
+	    			//New Position
+		    		String[] parts = lineA.split(" ");
+		    		
+		    		if (!Character.isLetter(parts[2].charAt(0))) {
+		    	
+		    			error = true;
+		    			
+		    		}
+		    		else {
+		    			this.posX = Integer.parseInt(parts[0]);
+		    			this.posY = Integer.parseInt(parts[1]);
+		    			this.dir = parts[2];
+		    		}
 	    			
 	    			//Add new Rover
+	    			
+	    			lineB =  br.readLine();
+
+	    			if (this.posX > this.plateauX || this.posY > this.plateauY) {
+	    				
+	    				error = true;
+	
+	    			}
+	    			else {
+	    				
+		    			Position pos = new Position (this.posX, this.posY, this.dir);
+		    			Rover rover = new Rover(roverN,pos,lineB);
+		    			this.Rovers.add(rover);
+		    			
+		    			roverN++;
+		    			
+	    			}
 	    		}
-	    	lineN ++;
 	      }
 	      
-	      fr.close();
+	      f.close();
 	    }
 	    catch(Exception e) {
-	      System.out.println("Exception reading the file "+ file + ": " + e);
-	    	}
-		
-		
+	    	
+	      this.error = true;
+	      
+	    }
+
 	}	
-	
-	
+		
 	public void goAhead() {
 		
-		for(int i = 0; i < this.Rovers.size(); i++) {
+		
+		if(error) {
 			
-			char[] instructions = this.Rovers.get(i).getInstructions().toCharArray();
+			showMessageError();
 			
-			for (int k = 0; k < instructions.length; k++) {
-				
-				if (instructions[k] == 'M') {
-				
-					move(this.Rovers.get(i));
-				}
-				else {
-				}
-			}
-			  
 		}
-		System.out.println("SYSTEM OUT:");
-		System.out.println("	"+this.Rovers.get(0).getPos());
-		System.out.println("	"+this.Rovers.get(1).getPos());
+		
+		else {
+			
+			for(Rover rover : this.Rovers) {
+				
+				char[] instructions = rover.getInstructions().toCharArray();
+				
+				for (char instruction: instructions) {
+						
+					if (instruction == 'M') move(rover); 
+					
+					else if (instruction == 'R' || instruction == 'L') turn(rover, instruction);	
+					
+				}
+				  
+			}
+			System.out.println("SYSTEM OUT:");
+			System.out.println("	"+this.Rovers.get(0).getPos());
+			System.out.println("	"+this.Rovers.get(1).getPos());
+			
+		}
 		
 	}
 	
-	public void move(Rover rover) {
+	private void move(Rover rover) {
 			
 		 switch (rover.getPos().getDir()) {
 		 
-         case "N":  rover.getPos().incrementY();
+         case "N":  if (this.plateauY > rover.getPos().getY()) {rover.getPos().incrementY();}
                   break;
-         case "E":  rover.getPos().incrementX();
+         case "E":  if (this.plateauX > rover.getPos().getX()) {rover.getPos().incrementX();}
                   break;
-         case "S":  rover.getPos().decrementY();
+         case "S":  if (0 < rover.getPos().getY()) {rover.getPos().decrementY();}
                   break;
-         case "W":  rover.getPos().decrementX();
+         case "W":  if (0 < rover.getPos().getX()) {rover.getPos().decrementX();}
                   break;
          default: dir= "invalid dir";
          
 		}
 	}
 	
-	public void turn(Rover rover, char instruction) {
+	private void turn(Rover rover, char instruction) {
 	
 		 switch (rover.getPos().getDir()) {
 		 
@@ -137,6 +154,10 @@ public class MarsRoverControl {
 		
 	}
 	
+	private void showMessageError() {
+		
+		System.out.println("The data input is not correct. Please, enter correct data!");
+	}
 	
 	
 }

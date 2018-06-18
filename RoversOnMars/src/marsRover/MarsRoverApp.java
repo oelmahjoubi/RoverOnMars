@@ -8,6 +8,7 @@ public class MarsRoverApp {
 		
 		marsRover.readInstructions("Instructions.txt");
 		marsRover.goAhead();
+		
 	}
 
 }

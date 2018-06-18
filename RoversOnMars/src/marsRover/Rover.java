@@ -1,9 +1,9 @@
 package marsRover;
 
 public class Rover {
-	int roverNumber = 0;
-	Position pos;
-	String instructions;
+	private int roverNumber = 0;
+	private Position pos;
+	private String instructions;
 	
 	public Rover(int roverNumber, Position pos, String instructions) {
 		
