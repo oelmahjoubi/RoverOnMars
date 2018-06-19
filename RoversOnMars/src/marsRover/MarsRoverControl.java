@@ -121,7 +121,7 @@ public class MarsRoverControl {
 	        int k = (dir == 'W' || dir == 'E') ? 0 : 1;
 	        int value = (dir == 'N' || dir == 'E') ? 1 : -1;
 	        
-	        int increment = rover.getPos().getXY[k] + value;
+	        int increment = rover.getPos().getXY()[k] + value;
 	
 	        if((k == 0 && increment >= 0 && increment <= this.plateauX) 
 	        		
