@@ -37,6 +37,11 @@ public class Position {
 		this.xy[k] =  this.xy[k] + xy;
 	}
 
+	public int[] getXY() {
+		
+		retrun this.xy;
+	}
+	
 	@Override
 	public String toString() {
 		return "Position [xy=" + Arrays.toString(xy) + ", dir=" + dir + "]";
