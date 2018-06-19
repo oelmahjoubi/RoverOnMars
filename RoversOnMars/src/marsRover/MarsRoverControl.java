@@ -41,13 +41,11 @@ public class MarsRoverControl {
 
 	    	}
 	    	else {
-	    		
 		    		String[] parts = lineA.split(" ");
 		    		
 		    		if (!Character.isLetter(parts[2].charAt(0))) {
 		    	
-		    			throw new InvalidValue(1);
-		    			
+		    			throw new InvalidValue(1);	
 		    		}
 		    		else {
 		    			posX = Integer.parseInt(parts[0]);
@@ -58,8 +56,7 @@ public class MarsRoverControl {
 		    		lineB =  br.readLine();
 	    			
 		    		if (posX > this.plateauX || posY > this.plateauY) {
-	    				
-		    		
+	    			
 	    				throw new InvalidValue(2);
 	    			}
 	    					
@@ -99,7 +96,6 @@ public class MarsRoverControl {
 		
 	public List<Rover> goAhead() {
 		
-		
 		if(!error) {
 			
 			for(Rover rover : this.Rovers) {
@@ -110,16 +106,12 @@ public class MarsRoverControl {
 						
 					if (instruction == 'M') move(rover); 
 					
-					else if (instruction == 'R' || instruction == 'L') turn(rover, instruction);	
-					
-				}
-				  
+					else if (instruction == 'R' || instruction == 'L') turn(rover, instruction);		
+				}	  
 			}
 			return this.Rovers;
 		}
-		
 		else return null;
-		
 	}
 	
 	private void move(Rover rover) {
@@ -128,9 +120,16 @@ public class MarsRoverControl {
 			
 	        int k = (dir == 'W' || dir == 'E') ? 0 : 1;
 	        int value = (dir == 'N' || dir == 'E') ? 1 : -1;
+	        
+	        int increment = rover.getPos().getXY[k] + value;
 	
-	        rover.getPos().setXY(k, value);
-	
+	        if((k == 0 && increment >= 0 && increment <= this.plateauX) 
+	        		
+	        		|| (k == 1 && increment > 0 && increment <= this.plateauY) ) {
+	        	
+	        	rover.getPos().setXY(k, value);
+	        }
+	        
 		}
 	
 	private void turn(Rover rover, char instruction) {		 
