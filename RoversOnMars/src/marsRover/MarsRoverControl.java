@@ -3,28 +3,28 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import Exceptions.InvalidValue;
  
 
 public class MarsRoverControl {
 
 	private int plateauX = 0;
 	private int plateauY = 0;
-	private int posY = 0;
-	private int posX = 0;
-	private String dir;
 	private boolean error = false;
 	
 	private List<Rover> Rovers = new ArrayList<Rover>();
 	
 	
-	public void readInstructions(String fileX) {
-		
-		String file = fileX;		
+	public void readInstructions(String file) {
 		
 	    try {
 	      FileReader f = new FileReader(file);
 	      BufferedReader br = new BufferedReader(f);
 	 
+	      int posX = 0;
+	      int posY = 0;
+	      char dir = 0;
 	      String lineA;
 	      String lineB;
 	      int roverN = 0;
@@ -42,61 +42,65 @@ public class MarsRoverControl {
 	    	}
 	    	else {
 	    		
-	    			//New Position
 		    		String[] parts = lineA.split(" ");
 		    		
 		    		if (!Character.isLetter(parts[2].charAt(0))) {
 		    	
-		    			error = true;
+		    			throw new InvalidValue(1);
 		    			
 		    		}
 		    		else {
-		    			this.posX = Integer.parseInt(parts[0]);
-		    			this.posY = Integer.parseInt(parts[1]);
-		    			this.dir = parts[2];
+		    			posX = Integer.parseInt(parts[0]);
+		    			posY = Integer.parseInt(parts[1]);
+		    			dir = parts[2].charAt(0);
 		    		}
+	    		
+		    		lineB =  br.readLine();
 	    			
-	    			//Add new Rover
-	    			
-	    			lineB =  br.readLine();
-
-	    			if (this.posX > this.plateauX || this.posY > this.plateauY) {
+		    		if (posX > this.plateauX || posY > this.plateauY) {
 	    				
-	    				error = true;
-	
+		    		
+	    				throw new InvalidValue(2);
 	    			}
-	    			else {
+	    					
+	    			else if (lineB!= null){
 	    				
-		    			Position pos = new Position (this.posX, this.posY, this.dir);
+		    			Position pos = new Position (posX, posY, dir);
 		    			Rover rover = new Rover(roverN,pos,lineB);
 		    			this.Rovers.add(rover);
-		    			
+		    			 
 		    			roverN++;
 		    			
 	    			}
+	    			else {
+	    				
+	    				throw new InvalidValue(3);
+	    			}
 	    		}
 	      }
-	      
+	      br.close();
 	      f.close();
+	      
+	    }
+	    catch(InvalidValue e) {
+	    	
+	    	System.out.println(e.getMessageError());
+	    	error = true;
+	    	
 	    }
 	    catch(Exception e) {
 	    	
-	      this.error = true;
-	      
-	    }
+	    	System.out.println("An error occured when reading the Instructions.txt file!");
+	    	error = true;
+		      
+		 }
 
 	}	
 		
-	public void goAhead() {
+	public List<Rover> goAhead() {
 		
 		
-		if(error) {
-			
-			showMessageError();
-			
-		}
-		
-		else {
+		if(!error) {
 			
 			for(Rover rover : this.Rovers) {
 				
@@ -111,53 +115,34 @@ public class MarsRoverControl {
 				}
 				  
 			}
-			System.out.println("SYSTEM OUT:");
-			System.out.println("	"+this.Rovers.get(0).getPos());
-			System.out.println("	"+this.Rovers.get(1).getPos());
-			
+			return this.Rovers;
 		}
+		
+		else return null;
 		
 	}
 	
 	private void move(Rover rover) {
 			
-		 switch (rover.getPos().getDir()) {
-		 
-         case "N":  if (this.plateauY > rover.getPos().getY()) {rover.getPos().incrementY();}
-                  break;
-         case "E":  if (this.plateauX > rover.getPos().getX()) {rover.getPos().incrementX();}
-                  break;
-         case "S":  if (0 < rover.getPos().getY()) {rover.getPos().decrementY();}
-                  break;
-         case "W":  if (0 < rover.getPos().getX()) {rover.getPos().decrementX();}
-                  break;
-         default: dir= "invalid dir";
-         
-		}
-	}
+			char dir = rover.getPos().getDir();
+			
+	        int k = (dir == 'W' || dir == 'E') ? 0 : 1;
+	        int value = (dir == 'N' || dir == 'E') ? 1 : -1;
 	
-	private void turn(Rover rover, char instruction) {
+	        rover.getPos().setXY(k, value);
 	
-		 switch (rover.getPos().getDir()) {
-		 
-         case "N":  if (instruction == 'L') {rover.getPos().setDir("W");} else {rover.getPos().setDir("E");}
-                  break;
-         case "E":  if (instruction == 'L') {rover.getPos().setDir("N");} else {rover.getPos().setDir("S");}
-                  break;
-         case "S":  if (instruction == 'L') {rover.getPos().setDir("E");} else {rover.getPos().setDir("W");}
-                  break;
-         case "W":  if (instruction == 'L') {rover.getPos().setDir("S");} else {rover.getPos().setDir("N");}
-                  break;
-         default: dir= "invalid dir";
-         
 		}
+	
+	private void turn(Rover rover, char instruction) {		 
+		 
+		  	String  orientation = "WNES";
+	        char pos = rover.getPos().getDir();
+	        
+	        int location = (instruction == 'L') ? orientation.indexOf(pos) - 1 :orientation.indexOf(pos) + 1;
+	        if (location < 0) location = 3; else if (location > 3) location = 0;
+	        
+	        rover.getPos().setDir(orientation.charAt(location));
 		
 	}
-	
-	private void showMessageError() {
-		
-		System.out.println("The data input is not correct. Please, enter correct data!");
-	}
-	
 	
 }

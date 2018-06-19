@@ -1,55 +1,46 @@
 package marsRover;
 
+import java.util.Arrays;
+
 public class Position {
-	private int x;
-	private int y;
-	private String dir;
+	int[] xy = new int[2];
+	private char dir;
 	
-	public Position(int x, int y, String dir) {
+	public Position(int x, int y, char dir) {
 		
-		this.x = x;
-		this.y = y;
+		this.xy[0] = x;
+		this.xy[1] = y;
 		this.dir = dir;
 		
 	}
 	
 	public int getX() {
-		return x;
+		return this.xy[0];
 	}
 	public void setX(int x) {
-		this.x = x;
+		this.xy[0] = x;
 	}
 	public int getY() {
-		return y;
+		return this.xy[1];
 	}
 	public void setY(int y) {
-		this.y = y;
+		this.xy[1] = y;
 	}
-	public String getDir() {
+	public char getDir() {
 		return dir;
 	}
-	public void setDir(String dir) {
+	public void setDir(char dir) {
 		this.dir = dir;
 	}
 	
-	public void incrementX() {
-		this.x ++;
-	}
-	
-	public void decrementX() {
-		this.x --;
-	}
-	
-	public void incrementY() {
-		this.y ++;
-	}
-	
-	public void decrementY() {
-		this.y --;
+	public void setXY(int k, int xy) {
+		this.xy[k] =  this.xy[k] + xy;
 	}
 
 	@Override
 	public String toString() {
-		return "Position [x=" + x + ", y=" + y + ", dir=" + dir + "]";
+		return "Position [xy=" + Arrays.toString(xy) + ", dir=" + dir + "]";
 	}
+
+
 }
