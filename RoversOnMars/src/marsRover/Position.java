@@ -39,7 +39,7 @@ public class Position {
 
 	public int[] getXY() {
 		
-		retrun this.xy;
+		return this.xy;
 	}
 	
 	@Override
