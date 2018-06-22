@@ -125,7 +125,7 @@ public class MarsRoverControl {
 	
 	        if((k == 0 && increment >= 0 && increment <= this.plateauX) 
 	        		
-	        		|| (k == 1 && increment > 0 && increment <= this.plateauY) ) {
+	        		|| (k == 1 && increment >= 0 && increment <= this.plateauY) ) {
 	        	
 	        	rover.getPos().setXY(k, value);
 	        }
